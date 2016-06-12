@@ -1,4 +1,7 @@
 from flask import Flask
-app = Flask(__name__)
-from app import views
+from flask_pymongo import PyMongo
 
+app = Flask(__name__)
+mongo = PyMongo(app)
+
+from app import views
