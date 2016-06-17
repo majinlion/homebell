@@ -28,8 +28,8 @@ tickets : {
 	"Priority" : string,
 	"Status" : string,
 	"Resolution" : string,
-	"Start" : datetime,
-	"End" : datetime,
+	"Start" : int,
+	"End" : int,
 	"Reporter" : string,
 	"AssignedTo" : string,
 	"Comments" : [string]

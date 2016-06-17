@@ -7,13 +7,117 @@ from jsonencoder import JSONEncoder
 from bson import BSON
 from bson import json_util,ObjectId
 from response import *
-
+import utils
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client.tms
 
+#TODO1 : filtering options wrt different fields -> #DONE
+#TODO2 : pagination options from frontentd
 
-def get_tickets():
+
+def get_tickets(input):
+	try:
+		data = json.loads(input)
+	except Exception as e:
+		print e
+	result =[]
+	match_str = {}
+	match_str = utils.get_match_query(data)
+	user = data["user"]
+	
+	match_str={"$match": {"$or":  [{"reporter": user},{"assignedto" : user} ] }}
+	
+	pipe = []
+	pipe.append(match_str)
+
+	pipe.append({"$project": {
+	            "_id": 1,
+	            "title" : 1,
+	            "description" : 1,
+				"category" : 1,
+				"priority" : 1,
+				"status" : 1,
+				"resolutions" : 1,
+				"start" : 1,
+				"end" : 1,
+				"reporter" : 1,
+				"assignedto" : 1,
+				"comments" : 1
+	            } })
+	x = db.tickets.aggregate(pipeline=pipe)
+	result = list(x)
+	return result
+	#return json.dumps(result)
+
+#todo : add tests
+def create_ticket(input):
+	data = json.loads(input)
+	try:
+		db.tickets.insert_one(data)
+		return "Ticket Created"
+	except Exception as e:
+		print e
+		return ""
+
+
+def assign_ticket(input):
+	data = json.loads(input)
+	try:
+		db.tickets.update_one(
+			{
+				"_id" : input["_id"]
+			},
+			{
+				"$set": 
+				{
+            		"assignedto": data["assignedto"]
+            	}
+            }
+		)
+		return "Ticket Assigned"
+	except Exception as e:
+		print e
+		return ""
+
+def change_status(input):
+	data = json.loads(input)
+	try:
+		db.tickets.update_one(
+			{
+				"_id" : data["_id"]
+			},
+			{
+				"$set":
+				{
+					"status" : data["status"]
+				}
+			}
+			)
+		return "Status Updated"
+	except Exception as e:
+		print e
+		return ""
+
+
+def change_resolution(input):
+	data = json.loads(input)
+	try:
+		db.tickets.update_one(
+			{
+				"_id" : data["_id"]
+			},
+			{
+				"$set":
+				{
+					"resolutions" : data["resolutions"]
+				}
+			}
+			)
+		return "Resolution Updated"
+	except Exception as e:
+		print e
+		return ""
 
 def post(url,data,headers):
     ''' HTTP POST REQUEST. Returns response object '''
@@ -27,12 +131,3 @@ def get(url):
     ''' HTTP GET REQUEST. Returns response object '''
     req = requests.get(url);
     return req.text;
-
-def get_tickets(user):
-	output = {}
-	result =[]
-	try:
-		output = db.tickets.find({"reporter" : user})
-		for i in output:
-			result.append(i)
-	return result
