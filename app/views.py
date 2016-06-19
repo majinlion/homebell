@@ -2,12 +2,13 @@ from app import app
 from pymongo import MongoClient
 import json
 from bson import ObjectId
-from flask import request
+from flask import request, render_template
 import requests
 from jsonencoder import JSONEncoder
 from bson import BSON
 from bson import json_util,ObjectId
 from response import *
+from tickets import *
 import manager
 client = MongoClient('mongodb://localhost:27017/')
 db = client.tms
@@ -37,20 +38,41 @@ You are free to use any technologies you want. Create database structure to supp
 
 @app.route('/')
 def home_page():
-	active_tickets = db.tickets.find({'active': 'true'})
-	return (active_tickets[0]["title"])
+	#return render_template('index.html')
+	#clusters = [Cluster([p]) for p in initial]
+	active_tickets = db.tickets.find()
+	l = []
+	for i in active_tickets:
+		l.append(i)
+	activeTickets = [(Ticket(i)) for i in l]
+	for i in activeTickets:
+		print i.title
+	#activeTickets = [Ticket(i) for i in active_tickets]
+	#print activeTickets
+	return render_template('index.html', tickets=activeTickets)
+	#return (active_tickets[0]["title"])
 	#return render_template('index.html',
 	#    active_tickets=active_tickets)
 
 
-@app.route('/create_ticket', methods=['POST'])
+@app.route('/create_ticket', methods=['GET', 'POST'])
 def create_ticket():
-	try:
-		http_response = CustomResponse(200,"Creating tickets successful", manager.create_ticket(request.data))
-		return http_response.get_success_message()
-	except:
-		http_response = CustomResponse(11111,"There was some exception in creating ticket" , "")
-		return http_response.get_failed_message()
+	if request.method == 'GET':
+		return render_template('create.html')
+	if request.method == 'POST':
+		#print request.form.items()
+		dic = {}
+		for k,v in request.form.items():
+			dic[k] = v
+		op = json.dumps(dic)
+		print op
+		try:
+			http_response = CustomResponse(200,"Creating tickets successful", manager.create_ticket(op))
+			return http_response.get_success_message()
+		except Exception as e:
+			print e
+			http_response = CustomResponse(11111,"There was some exception in creating ticket" , "")
+			return http_response.get_failed_message()
 
 
 @app.route('/assign_ticket', methods=['POST'])
@@ -62,13 +84,23 @@ def assign_tickets():
 		http_response = CustomResponse(11111,"There was some exception in assigning ticket" , "")
 		return http_response.get_failed_message()
 
-@app.route('/get_tickets', methods=['POST'])
+@app.route('/get_tickets', methods=['GET', 'POST'])
 def get_tickets():
-	#return manager.get_tickets(request.data)
+	if request.method == 'GET':
+		return render_template('gettickets.html')
+	if request.method == 'POST':
+		#print request.form.items()
+		dic = {}
+		for k,v in request.form.items():
+			dic[k] = v
+		op = json.dumps(dic)
+		print op
+	return manager.get_tickets(op)
 	try:
-		http_response = CustomResponse(200,"Get tickets successful" , manager.get_tickets(request.data))
+		http_response = CustomResponse(200,"Get tickets successful" , manager.get_tickets(op))
 		return http_response.get_success_message()
-	except:
+	except Exception as e:
+		print e
 		http_response = CustomResponse(11111,"There was some exception in getting tickets" , "")
 		return http_response.get_failed_message()
 

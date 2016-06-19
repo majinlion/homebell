@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Active Tickets</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<form action="http://127.0.0.1:5000/create_ticket">
+    <input type="submit" value="Create New Ticket">
+</form>
+<form action="http://127.0.0.1:5000/get_tickets">
+    <input type="submit" value="Get Tickets">
+</form>
+<body>
+<div class="container">
+  <h2>Active Tickets</h2>
+  <p></p>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Reporter</th>
+        <th>AssignedTo</th>
+        <th>Category</th>
+        <th>Priority</th>
+        <th>Start</th>
+        <th>End</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr class='clickable-row' data-href='url://link-for-first-row/'>
+	      	<td><a href = ""{{ticket.id}}</td>
+	      	<td>{{ticket.title}}</td>
+	      	<td>{{ticket.status}}</td>
+	      	<td>{{ticket.reporter}}</td>
+	      	<td>{{ticket.assignedto}}</td>
+	      	<td>{{ticket.category}}</td>
+	      	<td>{{ticket.priority}}</td>
+	      	<td>{{ticket.start}}</td>
+	      	<td>{{ticket.end}}</td>
+	    </tr>
+	  {% endfor %}
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

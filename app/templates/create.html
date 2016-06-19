@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Create Ticket</title>
+   <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+   <script src="/scripts/jquery.min.js"></script>
+   <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form id ="createform" class = "form-horizontal" role = "form" method = "post" action = "http://127.0.0.1:5000/create_ticket" >
+   
+   <div class = "form-group">
+      <label for = "reporter" class = "col-sm-2 control-label">Reporter</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name = "reporter" class = "form-control" id = "reporter" placeholder = "Enter Reporter">
+      </div>
+   </div>
+   
+   <div class = "form-group">
+      <label for = "assignedto" class = "col-sm-2 control-label">Assignee</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name = "assignedto" class = "form-control" id = "assignedto" placeholder = "Enter Assignee">
+      </div>
+   </div>
+   
+   <div class = "form-group">
+      <label for = "title" class = "col-sm-2 control-label">Title</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name ="title" class = "form-control" id = "title" placeholder = "Enter Title">
+      </div>
+   </div>
+
+   <div class = "form-group">
+      <label for = "status" class = "col-sm-2 control-label">Status</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name = "status" class = "form-control" id = "status" placeholder = "Enter Status">
+      </div>
+   </div>
+
+   <div class = "form-group">
+      <label for = "priority" class = "col-sm-2 control-label">Priority</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name = "priority" class = "form-control" id = "priority" placeholder = "Enter Priority">
+      </div>
+   </div>
+
+   <div class = "form-group">
+      <label for = "resolutions" class = "col-sm-2 control-label">Resolution</label>
+		
+      <div class = "col-sm-10">
+         <input type = "text" name = "resolution" class = "form-control" id = "resolution" placeholder = "Enter Resolution">
+      </div>
+   </div>
+
+   <button type="submit">Create Ticket</button>
+	
+</form>
+
+<script>
+   	$(function() {
+  	$('form').submit(function() {
+  		alert("asf");
+     	$('#result').text(JSON.stringify($('form').serializeObject()));
+    		return false;
+  		});
+	});
+</script>
+
+</body>
+</html>

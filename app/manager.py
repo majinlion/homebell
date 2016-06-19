@@ -15,7 +15,6 @@ db = client.tms
 #TODO1 : filtering options wrt different fields -> #DONE
 #TODO2 : pagination options from frontentd
 
-
 def get_tickets(input):
 	try:
 		data = json.loads(input)
@@ -24,15 +23,17 @@ def get_tickets(input):
 	result =[]
 	match_str = {}
 	match_str = utils.get_match_query(data)
+	'''
 	user = data["user"]
-	
 	match_str={"$match": {"$or":  [{"reporter": user},{"assignedto" : user} ] }}
+	'''
 	
 	pipe = []
-	pipe.append(match_str)
+	pipe.append({"$match" : match_str})
 
-	pipe.append({"$project": {
-	            "_id": 1,
+	pipe.append(
+				{"$project": {
+	            "_id": 0,
 	            "title" : 1,
 	            "description" : 1,
 				"category" : 1,
@@ -44,10 +45,14 @@ def get_tickets(input):
 				"reporter" : 1,
 				"assignedto" : 1,
 				"comments" : 1
-	            } })
+	            }})
+	print "here"
 	x = db.tickets.aggregate(pipeline=pipe)
+	print x
+	print "2"
 	result = list(x)
-	return result
+	return json.dumps(result)
+	#return json.dumps(x)
 	#return json.dumps(result)
 
 #todo : add tests
