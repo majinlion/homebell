@@ -8,6 +8,8 @@ from bson import BSON
 from bson import json_util,ObjectId
 from response import *
 import utils
+from bson.objectid import ObjectId
+
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client.tms
@@ -23,6 +25,7 @@ def get_tickets(input):
 	result =[]
 	match_str = {}
 	match_str = utils.get_match_query(data)
+
 	'''
 	user = data["user"]
 	match_str={"$match": {"$or":  [{"reporter": user},{"assignedto" : user} ] }}
@@ -33,7 +36,7 @@ def get_tickets(input):
 
 	pipe.append(
 				{"$project": {
-	            "_id": 0,
+	            "_id": 1,
 	            "title" : 1,
 	            "description" : 1,
 				"category" : 1,
@@ -51,9 +54,25 @@ def get_tickets(input):
 	print x
 	print "2"
 	result = list(x)
-	return json.dumps(result)
+	print "3"
+	return result
 	#return json.dumps(x)
 	#return json.dumps(result)
+
+def get_ticket_info(input):
+	result =[]
+	try:
+		print "123"
+		c = db.tickets.find({"_id":ObjectId(input['_id'])})
+		print "234"
+	except Exception as e:
+		print "error"
+		print e
+	print c[0]
+	print "sadfsdf"
+	result = list(c)
+	return result
+	#return json.dumps(c[0])
 
 #todo : add tests
 def create_ticket(input):
@@ -66,25 +85,31 @@ def create_ticket(input):
 		return ""
 
 
-def assign_ticket(input):
+def update_ticket(input):
 	data = json.loads(input)
+	print "in update ticket"
+	print data["id"]
 	try:
 		db.tickets.update_one(
 			{
-				"_id" : input["_id"]
+				"_id" : ObjectId(data["id"])
 			},
 			{
 				"$set": 
 				{
-            		"assignedto": data["assignedto"]
+            		"assignedto": data["assignedto"],
+            		"status" : data["status"],
+            		"resolutions" : data["resolutions"],
+            		"assignedto" : data["assignedto"]
             	}
             }
 		)
-		return "Ticket Assigned"
+		return "Ticket Updated"
 	except Exception as e:
 		print e
-		return ""
+		return "Failed To Update"
 
+'''
 def change_status(input):
 	data = json.loads(input)
 	try:
@@ -123,6 +148,8 @@ def change_resolution(input):
 	except Exception as e:
 		print e
 		return ""
+
+'''
 
 def post(url,data,headers):
     ''' HTTP POST REQUEST. Returns response object '''

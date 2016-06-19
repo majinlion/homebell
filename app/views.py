@@ -75,13 +75,32 @@ def create_ticket():
 			return http_response.get_failed_message()
 
 
-@app.route('/assign_ticket', methods=['POST'])
+@app.route('/assign_ticket', methods=['GET', 'POST'])
 def assign_tickets():
+	ticketId = request.args.get('ticketId')
+	op = {}
+	op['_id'] = ticketId
+	l = []
+	current_ticket = db.tickets.find({"_id":ObjectId(op['_id'])})
+	for i in current_ticket:
+		l.append(i)
+	ticket_info = [(Ticket(i)) for i in l]
+	if request.method == 'GET':
+		return render_template('updateTicket.html', ticketInfo = ticket_info[0])
+
+	if request.method == 'POST':
+		dic = {}
+		for k,v in request.form.items():
+			dic[k] = v
+		op = json.dumps(dic)
+	print op
 	try:
-		http_response = CustomResponse(200,"Ticket assigned", manager.assign_ticket(request.data))
-		return http_response.get_success_message()
+		return manager.update_ticket(op)
+		#print "csr"
+		#http_response = CustomResponse(200,"Ticket Updated", manager.update_ticket(op))
+		#return http_response.get_success_message()
 	except:
-		http_response = CustomResponse(11111,"There was some exception in assigning ticket" , "")
+		http_response = CustomResponse(11111,"There was some exception in updating ticket" , "")
 		return http_response.get_failed_message()
 
 @app.route('/get_tickets', methods=['GET', 'POST'])
@@ -95,10 +114,17 @@ def get_tickets():
 			dic[k] = v
 		op = json.dumps(dic)
 		print op
-	return manager.get_tickets(op)
+	#return manager.get_tickets(op)
 	try:
-		http_response = CustomResponse(200,"Get tickets successful" , manager.get_tickets(op))
-		return http_response.get_success_message()
+		return_value = manager.get_tickets(op)
+		l = []
+		for i in return_value:
+			l.append(i)
+		ticket_info = [(Ticket(i)) for i in l]
+		print ticket_info
+		return render_template('ticketList.html', tickets = ticket_info)
+		#http_response = CustomResponse(200,"Get tickets successful" , manager.get_tickets(op))
+		#return http_response.get_success_message()
 	except Exception as e:
 		print e
 		http_response = CustomResponse(11111,"There was some exception in getting tickets" , "")

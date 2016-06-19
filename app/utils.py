@@ -1,3 +1,5 @@
+from bson.objectid import ObjectId
+
 def get_match_query(req_params):
 	match_query = {}
 	if '$and' not in match_query:
@@ -13,6 +15,9 @@ def get_match_query(req_params):
 	if 'title' in req_params and req_params['title']:
 		match_query['$and'].append({'title':req_params['title']})
 		#match_query["title"] = req_params['title']
+
+	if '_id' in req_params and req_params['_id']:
+		match_query['$and'].append({'_id':ObjectId(req_params['_id'])})
 
 	if 'category' in req_params and req_params['category']:
 		match_query['$and'].append({'category':req_params['category']})

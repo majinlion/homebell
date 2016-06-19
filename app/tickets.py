@@ -11,6 +11,8 @@ class Ticket:
 		self.resolutions = ticket.get("resolutions")
 		self.start = ticket.get("start")
 		self.end = ticket.get("end")
+		self.priority = ticket.get("priority")
+
 
 	def get_dict(self):
 		return_val={'id': self.id, 'title': self.title,
