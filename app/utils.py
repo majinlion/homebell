@@ -14,26 +14,21 @@ def get_match_query(req_params):
 
 	if 'title' in req_params and req_params['title']:
 		match_query['$and'].append({'title':req_params['title']})
-		#match_query["title"] = req_params['title']
 
 	if '_id' in req_params and req_params['_id']:
 		match_query['$and'].append({'_id':ObjectId(req_params['_id'])})
 
 	if 'category' in req_params and req_params['category']:
 		match_query['$and'].append({'category':req_params['category']})
-		#match_query["category"] = req_params['category']
 
 	if 'priority' in req_params and req_params['priority']:
 		match_query['$and'].append({'priority':req_params['priority']})
-		#match_query["priority"] = req_params['priority']
 
 	if 'status' in req_params and req_params['status']:
 		match_query['$and'].append({'status':req_params['status']})
-		#match_query["status"] = req_params['status']
 
 	if 'resolutions' in req_params and req_params['resolutions']:
 		match_query['$and'].append({'resolutions':req_params['resolutions']})
-		#match_query["resolutions"] = req_params['resolutions']
 
 
 	if 'start' in req_params and req_params['start'] != "":
@@ -50,5 +45,4 @@ def get_match_query(req_params):
 	if not len(match_query['$and']):
 	    match_query.pop("$and")
 
-	print match_query
 	return match_query

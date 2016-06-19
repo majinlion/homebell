@@ -38,8 +38,6 @@ You are free to use any technologies you want. Create database structure to supp
 
 @app.route('/')
 def home_page():
-	#return render_template('index.html')
-	#clusters = [Cluster([p]) for p in initial]
 	active_tickets = db.tickets.find()
 	l = []
 	for i in active_tickets:
@@ -47,12 +45,7 @@ def home_page():
 	activeTickets = [(Ticket(i)) for i in l]
 	for i in activeTickets:
 		print i.title
-	#activeTickets = [Ticket(i) for i in active_tickets]
-	#print activeTickets
 	return render_template('index.html', tickets=activeTickets)
-	#return (active_tickets[0]["title"])
-	#return render_template('index.html',
-	#    active_tickets=active_tickets)
 
 
 @app.route('/create_ticket', methods=['GET', 'POST'])
@@ -60,7 +53,6 @@ def create_ticket():
 	if request.method == 'GET':
 		return render_template('create.html')
 	if request.method == 'POST':
-		#print request.form.items()
 		dic = {}
 		for k,v in request.form.items():
 			dic[k] = v
@@ -96,9 +88,6 @@ def assign_tickets():
 	print op
 	try:
 		return manager.update_ticket(op)
-		#print "csr"
-		#http_response = CustomResponse(200,"Ticket Updated", manager.update_ticket(op))
-		#return http_response.get_success_message()
 	except:
 		http_response = CustomResponse(11111,"There was some exception in updating ticket" , "")
 		return http_response.get_failed_message()
@@ -108,13 +97,11 @@ def get_tickets():
 	if request.method == 'GET':
 		return render_template('gettickets.html')
 	if request.method == 'POST':
-		#print request.form.items()
 		dic = {}
 		for k,v in request.form.items():
 			dic[k] = v
 		op = json.dumps(dic)
 		print op
-	#return manager.get_tickets(op)
 	try:
 		return_value = manager.get_tickets(op)
 		l = []
@@ -123,25 +110,10 @@ def get_tickets():
 		ticket_info = [(Ticket(i)) for i in l]
 		print ticket_info
 		return render_template('ticketList.html', tickets = ticket_info)
-		#http_response = CustomResponse(200,"Get tickets successful" , manager.get_tickets(op))
-		#return http_response.get_success_message()
 	except Exception as e:
 		print e
 		http_response = CustomResponse(11111,"There was some exception in getting tickets" , "")
 		return http_response.get_failed_message()
-
-@app.route('/get_users')
-def get_users():
-	return "get users not implemented"
-
-@app.route('/change_status', methods=['POST'])
-def change_status():
-	return manager.change_status(request.data)
-	return "change _status"
-
-@app.route('/change_resolution', methods=['POST'])
-def change_resolution():
-	return manager.change_resolution(request.data)
 
 
 @app.route('/history')
