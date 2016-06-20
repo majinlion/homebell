@@ -56,13 +56,20 @@ def get_ticket_info(input):
 def create_ticket(input):
 	data = json.loads(input)
 	try:
-		db.tickets.insert_one(data)
+		_id = db.tickets.insert(data)
+		db.history.insert_one(
+			{
+			"_id" : ObjectId(_id),
+			"dataArray" : [data]
+			}
+			)
 		return "Ticket Created"
 	except Exception as e:
 		return e
 
 
 def update_ticket(input):
+	data = {}
 	data = json.loads(input)
 	try:
 		db.tickets.update_one(
@@ -79,11 +86,19 @@ def update_ticket(input):
             	}
             }
 		)
-		
+		a = db.history.update_one(
+			{
+			"_id" : ObjectId(data["id"])
+			},
+			{
+				"$push" : {"dataArray" : data}
+			}
+			)
 		return "Ticket Updated"
 	except Exception as e:
 		print e
 		return "Failed To Update"
+
 
 def comment_ticket(input):
 	data = json.loads(input)
@@ -96,6 +111,14 @@ def comment_ticket(input):
 				'$push' : {'comments' : data['comments']}
 			}
 		)
+		db.history.update_one(
+			{
+				"id" : data["id"]
+			},
+			{
+				"$push" : {"dataArray" : data}
+			}
+			)
 		return "Comment Successful"
 	except Exception as e:
 		print e

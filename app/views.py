@@ -43,8 +43,6 @@ def home_page():
 	for i in active_tickets:
 		l.append(i)
 	activeTickets = [(Ticket(i)) for i in l]
-	for i in activeTickets:
-		print i.title
 	return render_template('index.html', tickets=activeTickets)
 
 
@@ -57,7 +55,6 @@ def create_ticket():
 		for k,v in request.form.items():
 			dic[k] = v
 		op = json.dumps(dic)
-		print op
 		try:
 			http_response = CustomResponse(200,"Creating tickets successful", manager.create_ticket(op))
 			return http_response.get_success_message()
@@ -84,7 +81,6 @@ def comment_ticket():
 		for k,v in request.form.items():
 			dic[k] = v
 		op = json.dumps(dic)
-	print op
 	try:
 		return manager.comment_ticket(op)
 	except:
@@ -109,7 +105,6 @@ def assign_tickets():
 		for k,v in request.form.items():
 			dic[k] = v
 		op = json.dumps(dic)
-	print op
 	try:
 		return manager.update_ticket(op)
 	except:
@@ -125,14 +120,12 @@ def get_tickets():
 		for k,v in request.form.items():
 			dic[k] = v
 		op = json.dumps(dic)
-		print op
 	try:
 		return_value = manager.get_tickets(op)
 		l = []
 		for i in return_value:
 			l.append(i)
 		ticket_info = [(Ticket(i)) for i in l]
-		print ticket_info
 		return render_template('ticketList.html', tickets = ticket_info)
 	except Exception as e:
 		print e
