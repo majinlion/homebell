@@ -19,6 +19,6 @@ class Ticket:
 					'category': self.category, 'status': self.status,
 					'description': self.description, 'reporter': self.reporter, 'comments': self.comments,
 					'assignedto': self.assignedto, 'resolutions': self.resolutions, 'start': self.start,
-					'end': self.end
+					'end': self.end, 'description' : self.description
 					}
 		return return_val

@@ -42,8 +42,8 @@ tickets : {
 	"priority" : "normal",
 	"status" : "acknowledge",
 	"resolutions" : "not fixed",
-	"start" : "20160101",
-	"end" : "00000000",
+	"start" : 20160101,
+	"end" : 00000000,
 	"reporter" : "amit",
 	"assignedto" : "karthik",
 	"comments" : [
@@ -59,8 +59,8 @@ tickets : {
 	"priority" : "normal",
 	"status" : "acknowledge",
 	"resolutions" : "not fixed",
-	"start" : "20160101",
-	"end" : "00000000",
+	"start" : 20160101,
+	"end" : 00000000,
 	"reporter" : "amit",
 	"assignedto" : "karthik",
 	"comments" : [

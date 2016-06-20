@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       {% for ticket in tickets %}
-      <tr class='clickable-row' data-href='url://link-for-first-row/'>
+      <tr class='clickable-row' >
 	      	<td><a href = "http://127.0.0.1:5000/assign_ticket?ticketId={{ticket.id}}"/a>{{ticket.id}}</td>
 	      	<td>{{ticket.title}}</td>
 	      	<td>{{ticket.status}}</td>

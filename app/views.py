@@ -66,6 +66,30 @@ def create_ticket():
 			http_response = CustomResponse(11111,"There was some exception in creating ticket" , "")
 			return http_response.get_failed_message()
 
+@app.route('/comment_ticket', methods = ['GET', 'POST'])
+def comment_ticket():
+	ticketId = request.args.get('ticketId')
+	op = {}
+	op['_id'] = ticketId
+	l = []
+	current_ticket = db.tickets.find({"_id":ObjectId(op['_id'])})
+	for i in current_ticket:
+		l.append(i)
+	ticket_info = [(Ticket(i)) for i in l]
+	if request.method == 'GET':
+		return render_template('commentTicket.html', ticketInfo = ticket_info[0])
+
+	if request.method == 'POST':
+		dic = {}
+		for k,v in request.form.items():
+			dic[k] = v
+		op = json.dumps(dic)
+	print op
+	try:
+		return manager.comment_ticket(op)
+	except:
+		http_response = CustomResponse(11111,"There was some exception in commenting on the ticket" , "")
+		return http_response.get_failed_message()
 
 @app.route('/assign_ticket', methods=['GET', 'POST'])
 def assign_tickets():

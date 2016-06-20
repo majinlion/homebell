@@ -79,10 +79,28 @@ def update_ticket(input):
             	}
             }
 		)
+		
 		return "Ticket Updated"
 	except Exception as e:
 		print e
 		return "Failed To Update"
+
+def comment_ticket(input):
+	data = json.loads(input)
+	try:
+		db.tickets.update_one(
+			{
+				'_id' :ObjectId(data["id"])
+			},
+			{
+				'$push' : {'comments' : data['comments']}
+			}
+		)
+		return "Comment Successful"
+	except Exception as e:
+		print e
+		return "Failed to Comment"
+
 
 def post(url,data,headers):
     ''' HTTP POST REQUEST. Returns response object '''
