@@ -66,6 +66,10 @@ def create_ticket():
 @app.route('/comment_ticket', methods = ['GET', 'POST'])
 def comment_ticket():
 	ticketId = request.args.get('ticketId')
+	try:
+		skipValue = int(request.args.get('skipValue'))
+	except:
+		skipValue = 0
 	op = {}
 	op['_id'] = ticketId
 	l = []
@@ -73,8 +77,14 @@ def comment_ticket():
 	for i in current_ticket:
 		l.append(i)
 	ticket_info = [(Ticket(i)) for i in l]
+
 	if request.method == 'GET':
-		return render_template('commentTicket.html', ticketInfo = ticket_info[0])
+		ct = 0
+		for comment in ticket_info[0].comments:
+			ct+=1
+		maxValue = min(skipValue+5,ct)
+		comment_list = ticket_info[0].comments[skipValue:maxValue]
+		return render_template('commentTicket.html', ticketInfo = ticket_info[0],comment_list = comment_list)
 
 	if request.method == 'POST':
 		dic = {}
@@ -133,6 +143,6 @@ def get_tickets():
 		return http_response.get_failed_message()
 
 
-@app.route('/history')
+@app.route('/history', methods=['GET','POST'])
 def history():
-	return "history"
+	return manager.get_history()
