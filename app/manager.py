@@ -99,7 +99,6 @@ def update_ticket(input):
 		print e
 		return "Failed To Update"
 
-
 def comment_ticket(input):
 	data = json.loads(input)
 	try:
@@ -123,6 +122,15 @@ def comment_ticket(input):
 	except Exception as e:
 		print e
 		return "Failed to Comment"
+
+def get_history(ticketId):
+	result =[]
+	try:
+		c = db.history.find({"_id":ObjectId(ticketId)})
+	except Exception as e:
+		print e
+	result = list(c)
+	return result
 
 
 def post(url,data,headers):

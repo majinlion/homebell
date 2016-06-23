@@ -11,30 +11,8 @@ from response import *
 from tickets import *
 import manager
 client = MongoClient('mongodb://localhost:27017/')
+
 db = client.tms
-
-
-
-'''
-Every software firm uses some sort of ticketing system to easily track the tasks that are being performed.
-A user must be able to create and update a ticket (with title, description, category, Priority, Status, Resolution, 
-	Start date/End date , Reporter etc). Also the ticket should be assignable to a user. User must have the ability to
-	 comment on the ticket. There must be feature to get all the tickets for a user and get comments for the tickets
-	  as well. In addition, there must be ability to filter them based on assigned user, status, resolution or start/end date. 
-
-Hints-
-  - Create new tickets
-  - Assign a ticket to a user
-  - Change status or resolution of a ticket
-  - Get all tickets associated with user (with filtering and pagination options)
-  - Fetch comments associated with the ticket (with pagination option)
-
-Bonus points:
-- Should support the feature to track and show the activity history
-- Add Tests or perform TDD
-
-You are free to use any technologies you want. Create database structure to support the feature. 
-'''
 
 @app.route('/')
 def home_page():
@@ -143,6 +121,16 @@ def get_tickets():
 		return http_response.get_failed_message()
 
 
-@app.route('/history', methods=['GET','POST'])
-def history():
-	return manager.get_history()
+@app.route('/get_history', methods=['GET'])
+def get_history():
+	ticketId = request.args.get('ticketId')
+	try:
+		http_response = CustomResponse(200,"Getting History of ticket successful", manager.get_history(ticketId))
+		return http_response.get_success_message()
+	except:
+		http_response = CustomResponse(11111,"There was some exception in getting ticket history" , "")
+		return http_response.get_failed_message()
+
+
+	ticketId = request.args.get('ticketId')
+	return manager.get_history(ticketId)
